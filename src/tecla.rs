@@ -1,54 +1,33 @@
-pub enum Digito {
-    Zero,
-    Um,
-    Dois,
-    Três,
-    Quatro,
-    Cinco,
-    Seis,
-    Sete,
-    Oito,
-    Nove,
+use std::{rc::Rc, sync::Mutex};
+
+use crate::traits::{IntoRcMutex, Tecla, Teclado};
+
+pub struct TeclaKaio {
+    teclado: Option<Rc<Mutex<dyn Teclado>>>,
 }
 
-impl Digito {
-    pub fn to_char(&self) -> char {
-        match self {
-            Digito::Zero => '0',
-            Digito::Um => '1',
-            Digito::Dois => '2',
-            Digito::Três => '3',
-            Digito::Quatro => '4',
-            Digito::Cinco => '5',
-            Digito::Seis => '6',
-            Digito::Sete => '7',
-            Digito::Oito => '8',
-            Digito::Nove => '9',
-        }
+impl TeclaKaio {
+    pub fn new() -> Self {
+        Self { teclado: None }
     }
 }
 
-pub enum Operação {
-    Soma,
-    Subtração,
-    Multiplicação,
-    Divisão,
-    Radiciação,
-    Porcentagem,
+impl Tecla for TeclaKaio {
+    fn pressione(&self) {
+        todo!()
+    }
+
+    fn defina_teclado(&mut self, teclado: Rc<Mutex<dyn Teclado>>) {
+        self.teclado = Some(teclado);
+    }
+
+    fn obtenha_teclado(&self) -> Option<Rc<Mutex<dyn Teclado>>> {
+        self.teclado.clone()
+    }
 }
 
-pub enum Controle {
-    LigaLimpaErro,
-    Desliga,
-    MemóriaLeituraEscrita,
-    MemóriaSoma,
-    MemóriaSubtração,
-    Igual,
-    SeparadorDecimal,
-}
-
-pub struct Tecla;
-
-impl Tecla {
-    pub fn pressione() {}
+impl IntoRcMutex<TeclaKaio> for TeclaKaio {
+    fn into_rc_mutex(self) -> Rc<Mutex<TeclaKaio>> {
+        Rc::new(Mutex::new(self))
+    }
 }
