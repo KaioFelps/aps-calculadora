@@ -2,30 +2,14 @@ use std::{rc::Rc, sync::RwLock};
 
 use crate::{
     enums::{Digito, Operação},
+    pilha_de_digitos::PilhaDeDigitos,
     traits::{DynamicMutable, IntoDynamicMutable, Recebedor, Tela, Ucp},
 };
 
-const MAXIMO_DIGITOS_POR_OPERANDO: usize = 8;
-
-#[derive(Default)]
-pub struct PilhaDeOperandos {
-    memoria: [Option<Digito>; MAXIMO_DIGITOS_POR_OPERANDO],
-    topo: u8,
-}
-
-impl PilhaDeOperandos {
-    pub fn receba(&mut self, digito: Digito) {
-        if self.topo > MAXIMO_DIGITOS_POR_OPERANDO as u8 {
-            self.memoria[self.topo as usize] = Some(digito);
-            self.topo.saturating_add(1);
-        }
-    }
-}
-
 pub struct UcpKaio {
     tela: Option<DynamicMutable<Box<dyn Tela>>>,
-    digitos_operando_1: PilhaDeOperandos,
-    digitos_operando_2: PilhaDeOperandos,
+    digitos_operando_1: PilhaDeDigitos,
+    digitos_operando_2: PilhaDeDigitos,
     operação: Option<Operação>,
 }
 
@@ -33,8 +17,8 @@ impl UcpKaio {
     pub fn new() -> Self {
         Self {
             tela: None,
-            digitos_operando_1: PilhaDeOperandos::default(),
-            digitos_operando_2: PilhaDeOperandos::default(),
+            digitos_operando_1: PilhaDeDigitos::default(),
+            digitos_operando_2: PilhaDeDigitos::default(),
             operação: None,
         }
     }
