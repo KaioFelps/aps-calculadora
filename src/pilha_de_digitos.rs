@@ -2,7 +2,7 @@ use crate::enums::Digito;
 
 pub const MAXIMO_DIGITOS_POR_OPERANDO: u8 = 8;
 
-#[derive(Default)]
+#[derive(Default, Debug)]
 pub struct PilhaDeDigitos {
     pub(in crate::pilha_de_digitos) memoria: [Option<Digito>; MAXIMO_DIGITOS_POR_OPERANDO as usize],
     topo: u8,
@@ -10,7 +10,7 @@ pub struct PilhaDeDigitos {
 
 impl PilhaDeDigitos {
     pub fn receba(&mut self, digito: Digito) {
-        if self.topo > MAXIMO_DIGITOS_POR_OPERANDO {
+        if self.topo < MAXIMO_DIGITOS_POR_OPERANDO {
             self.memoria[self.topo as usize] = Some(digito);
             self.topo = self.topo.saturating_add(1);
         }
