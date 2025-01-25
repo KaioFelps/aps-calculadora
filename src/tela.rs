@@ -27,7 +27,7 @@ const DIGITOS: [[&str; ALTURA_DIGITO as usize]; TOTAL_DIGITOS_DISPONIVEIS as usi
 pub struct TelaKaio {
     sinal: Sinal,
     digitos: PilhaDeDigitos,
-    posição_cursor: u8,
+    coluna_do_separador: Option<u8>,
 }
 
 impl TelaKaio {
@@ -36,7 +36,7 @@ impl TelaKaio {
 
         let mut tela = Self {
             digitos: PilhaDeDigitos::default(),
-            posição_cursor: 0,
+            coluna_do_separador: None,
             sinal: Sinal::Positivo,
         };
 
@@ -58,8 +58,10 @@ impl Tela for TelaKaio {
 
     fn limpe(&mut self) {
         self.sinal = Sinal::Positivo;
+        self.coluna_do_separador = None;
         self.digitos.resete();
-        self.posição_cursor = u8::MAX;
+
+        self.atualize();
     }
 
     fn defina_sinal(&mut self, sinal: Sinal) {
@@ -68,31 +70,39 @@ impl Tela for TelaKaio {
     }
 
     fn defina_separador_decimal(&mut self) {
-        self.posição_cursor = self.digitos.largura() - 1;
+        self.coluna_do_separador = Some(self.digitos.largura().saturating_sub(1));
         self.atualize();
     }
 }
 
 impl TelaKaio {
     fn atualize(&mut self) {
-        self.limpe();
+        Console::clear_screen();
 
         for (index, digito) in (&self.digitos).into_iter().enumerate() {
-            self.insira_digito(
-                digito.clone(),
-                MAXIMO_DIGITOS_POR_OPERANDO - self.digitos.largura() + index as u8,
-            );
+            // serve para fazer com que os dígitos sejam inseridos da direita pra esquerda
+            // como na calculadora de exemplo
+            let col_with_offset =
+                MAXIMO_DIGITOS_POR_OPERANDO - self.digitos.largura() + index as u8;
+
+            self.exiba_digito(digito.clone(), col_with_offset);
         }
     }
 
-    fn insira_digito(&self, digito: Digito, indice: u8) {
-        for i in 0..ALTURA_DIGITO {
-            Console::set_cursor((indice * LARGURA_DIGITO + 1) as usize, i as usize);
+    fn exiba_digito(&self, digito: Digito, coluna: u8) {
+        for i in 1..=ALTURA_DIGITO {
+            Console::set_cursor((coluna * LARGURA_DIGITO + 1) as usize, i as usize);
+
             print!("{}", DIGITOS[digito.to_u8() as usize][(i - 1) as usize])
         }
 
-        if indice == self.posição_cursor {
-            print!("{}", DIGITOS[10][4]);
+        if let Some(coluna_do_separador) = self.coluna_do_separador {
+            let coluna_do_separador_normalizado =
+                (MAXIMO_DIGITOS_POR_OPERANDO - self.digitos.largura() + coluna_do_separador);
+
+            if coluna == coluna_do_separador_normalizado {
+                print!("{}", DIGITOS[10][4]);
+            }
         }
 
         println!();
