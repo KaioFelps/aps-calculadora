@@ -57,8 +57,32 @@ pub trait IntoDynamicMutable<T> {
     fn into_dynamic_mutable(self) -> DynamicMutable<T>;
 }
 
-pub trait Recebedor {
-    fn receba_digito(&mut self, digito: Digito);
-    fn receba_operação(&mut self, operação: Operação);
-    fn receba_controle(&mut self, sinal: Controle);
+pub trait UnwrapDynamicMutableRef<T> {
+    fn unwrap_write(&self) -> RwLockWriteGuard<'_, T>;
+}
+
+impl<T> UnwrapDynamicMutableRef<T> for DynamicMutable<T> {
+    fn unwrap_write(&self) -> RwLockWriteGuard<'_, T> {
+        self.write().unwrap()
+    }
+}
+
+pub trait UnwrapOptionalAsRef<T> {
+    fn unwrap_as_ref(&self) -> &DynamicMutable<T>;
+}
+
+impl<T> UnwrapOptionalAsRef<T> for &Option<DynamicMutable<T>> {
+    fn unwrap_as_ref(&self) -> &DynamicMutable<T> {
+        self.as_ref().unwrap()
+    }
+}
+
+pub trait UnwrapAndWrite<T> {
+    fn get_write_ref(&self) -> RwLockWriteGuard<'_, T>;
+}
+
+impl<J, T: UnwrapOptionalAsRef<J>> UnwrapAndWrite<J> for T {
+    fn get_write_ref(&self) -> RwLockWriteGuard<'_, J> {
+        self.unwrap_as_ref().unwrap_write()
+    }
 }

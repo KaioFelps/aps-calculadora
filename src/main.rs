@@ -5,7 +5,9 @@ use enums::{Digito, Sinal};
 use tecla::TeclaKaio;
 use teclado::TecladoKaio;
 use tela::TelaKaio;
-use traits::{Calculadora, IntoDynamicMutable};
+use traits::{
+    Calculadora, IntoDynamicMutable, UnwrapAndWrite, UnwrapDynamicMutableRef, UnwrapOptionalAsRef,
+};
 use ucp::UcpKaio;
 
 mod calculadora;
@@ -35,54 +37,18 @@ fn main() {
     calculadora1.defina_ucp(ucp1);
 
     // Testando a calculadora
-    calculadora1
-        .obtenha_tela()
-        .unwrap()
-        .write()
-        .unwrap()
-        .adicione(Digito::Um);
+    let tela = calculadora1.obtenha_tela();
+    let mut tela = tela.get_write_ref();
 
-    calculadora1
-        .obtenha_tela()
-        .unwrap()
-        .write()
-        .unwrap()
-        .limpe();
+    tela.adicione(Digito::Um);
+    tela.limpe();
 
-    calculadora1
-        .obtenha_tela()
-        .unwrap()
-        .write()
-        .unwrap()
-        .defina_sinal(Sinal::Negativo);
+    tela.defina_sinal(Sinal::Negativo);
 
-    calculadora1
-        .obtenha_tela()
-        .unwrap()
-        .write()
-        .unwrap()
-        .adicione(Digito::Um);
-
-    calculadora1
-        .obtenha_tela()
-        .unwrap()
-        .write()
-        .unwrap()
-        .adicione(Digito::Zero);
-
-    calculadora1
-        .obtenha_tela()
-        .unwrap()
-        .write()
-        .unwrap()
-        .defina_separador_decimal();
-
-    calculadora1
-        .obtenha_tela()
-        .unwrap()
-        .write()
-        .unwrap()
-        .adicione(Digito::Um);
+    tela.adicione(Digito::Um);
+    tela.adicione(Digito::Zero);
+    tela.defina_separador_decimal();
+    tela.adicione(Digito::Um);
 
     println!("All is okay!");
 }
