@@ -2,7 +2,7 @@ use std::{rc::Rc, sync::RwLock};
 
 use crate::{
     enums::{Digito, Operação},
-    traits::{DynamicMutable, IntoRcMutex, Recebedor, Tela, Ucp},
+    traits::{DynamicMutable, IntoDynamicMutable, Recebedor, Tela, Ucp},
 };
 
 const MAXIMO_DIGITOS_POR_OPERANDO: usize = 8;
@@ -76,8 +76,8 @@ impl Recebedor for UcpKaio {
     }
 }
 
-impl IntoRcMutex<Box<dyn Ucp>> for UcpKaio {
-    fn into_rc_mutex(self) -> DynamicMutable<Box<dyn Ucp>> {
+impl IntoDynamicMutable<Box<dyn Ucp>> for UcpKaio {
+    fn into_dynamic_mutable(self) -> DynamicMutable<Box<dyn Ucp>> {
         Rc::new(RwLock::new(Box::new(self)))
     }
 }

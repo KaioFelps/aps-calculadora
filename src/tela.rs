@@ -5,7 +5,7 @@ use std::{
 
 use crate::{
     enums::{Digito, Sinal},
-    traits::{DynamicMutable, IntoRcMutex, Tela},
+    traits::{DynamicMutable, IntoDynamicMutable, Tela},
 };
 
 pub struct TelaKaio;
@@ -34,8 +34,8 @@ impl Tela for TelaKaio {
     }
 }
 
-impl IntoRcMutex<Box<dyn Tela>> for TelaKaio {
-    fn into_rc_mutex(self) -> DynamicMutable<Box<dyn Tela>> {
+impl IntoDynamicMutable<Box<dyn Tela>> for TelaKaio {
+    fn into_dynamic_mutable(self) -> DynamicMutable<Box<dyn Tela>> {
         Rc::new(RwLock::new(Box::new(self)))
     }
 }

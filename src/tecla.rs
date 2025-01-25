@@ -1,6 +1,6 @@
 use std::{rc::Rc, sync::RwLock};
 
-use crate::traits::{DynamicMutable, IntoRcMutex, Tecla, Teclado};
+use crate::traits::{DynamicMutable, IntoDynamicMutable, Tecla, Teclado};
 
 pub struct TeclaKaio {
     teclado: Option<DynamicMutable<Box<dyn Teclado>>>,
@@ -26,8 +26,8 @@ impl Tecla for TeclaKaio {
     }
 }
 
-impl IntoRcMutex<Box<dyn Tecla>> for TeclaKaio {
-    fn into_rc_mutex(self) -> DynamicMutable<Box<dyn Tecla>> {
+impl IntoDynamicMutable<Box<dyn Tecla>> for TeclaKaio {
+    fn into_dynamic_mutable(self) -> DynamicMutable<Box<dyn Tecla>> {
         Rc::new(RwLock::new(Box::new(self)))
     }
 }

@@ -1,7 +1,4 @@
-use std::{
-    rc::Rc,
-    sync::{Mutex, RwLock},
-};
+use std::{rc::Rc, sync::RwLock};
 
 use crate::enums::{Controle, Digito, Operação, Sinal};
 
@@ -43,8 +40,8 @@ pub trait Teclado {
 
 pub type DynamicMutable<T> = Rc<RwLock<T>>;
 
-pub trait IntoRcMutex<T> {
-    fn into_rc_mutex(self) -> DynamicMutable<T>;
+pub trait IntoDynamicMutable<T> {
+    fn into_dynamic_mutable(self) -> DynamicMutable<T>;
 }
 
 pub trait Recebedor {

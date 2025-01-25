@@ -3,7 +3,7 @@ use enums::{Digito, Sinal};
 use tecla::TeclaKaio;
 use teclado::TecladoKaio;
 use tela::TelaKaio;
-use traits::{Calculadora, IntoRcMutex, Teclado, Ucp};
+use traits::{Calculadora, IntoDynamicMutable, Teclado, Ucp};
 use ucp::UcpKaio;
 
 mod calculadora;
@@ -18,12 +18,12 @@ fn main() {
     // Montando a calculadora como numa linha de produção
     let tecla1 = TeclaKaio::new();
 
-    let teclado1 = TecladoKaio::new().into_rc_mutex();
+    let teclado1 = TecladoKaio::new().into_dynamic_mutable();
     teclado1.write().unwrap().adicione_tecla(Box::new(tecla1));
 
-    let tela1 = TelaKaio::new().into_rc_mutex();
+    let tela1 = TelaKaio::new().into_dynamic_mutable();
 
-    let ucp1 = UcpKaio::new().into_rc_mutex();
+    let ucp1 = UcpKaio::new().into_dynamic_mutable();
     ucp1.write().unwrap().defina_tela(tela1.clone());
 
     let mut calculadora1: CalculadoraKaio = CalculadoraKaio::new();

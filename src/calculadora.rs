@@ -1,6 +1,6 @@
 use std::{rc::Rc, sync::RwLock};
 
-use crate::traits::{Calculadora, DynamicMutable, IntoRcMutex, Teclado, Tela, Ucp};
+use crate::traits::{Calculadora, DynamicMutable, IntoDynamicMutable, Teclado, Tela, Ucp};
 
 pub struct CalculadoraKaio {
     teclado: Option<DynamicMutable<Box<dyn Teclado>>>,
@@ -44,8 +44,8 @@ impl Calculadora for CalculadoraKaio {
     }
 }
 
-impl IntoRcMutex<Box<dyn Calculadora>> for CalculadoraKaio {
-    fn into_rc_mutex(self) -> DynamicMutable<Box<dyn Calculadora>> {
+impl IntoDynamicMutable<Box<dyn Calculadora>> for CalculadoraKaio {
+    fn into_dynamic_mutable(self) -> DynamicMutable<Box<dyn Calculadora>> {
         Rc::new(RwLock::new(Box::new(self)))
     }
 }
