@@ -1,9 +1,9 @@
-use std::{rc::Rc, sync::Mutex};
+use std::{rc::Rc, sync::RwLock};
 
-use crate::traits::{IntoRcMutex, Tecla, Teclado};
+use crate::traits::{DynamicMutable, IntoRcMutex, Tecla, Teclado};
 
 pub struct TeclaKaio {
-    teclado: Option<Rc<Mutex<dyn Teclado>>>,
+    teclado: Option<DynamicMutable<Box<dyn Teclado>>>,
 }
 
 impl TeclaKaio {
@@ -17,17 +17,17 @@ impl Tecla for TeclaKaio {
         todo!()
     }
 
-    fn defina_teclado(&mut self, teclado: Rc<Mutex<dyn Teclado>>) {
+    fn defina_teclado(&mut self, teclado: DynamicMutable<Box<dyn Teclado>>) {
         self.teclado = Some(teclado);
     }
 
-    fn obtenha_teclado(&self) -> Option<Rc<Mutex<dyn Teclado>>> {
+    fn obtenha_teclado(&self) -> Option<DynamicMutable<Box<dyn Teclado>>> {
         self.teclado.clone()
     }
 }
 
-impl IntoRcMutex<TeclaKaio> for TeclaKaio {
-    fn into_rc_mutex(self) -> Rc<Mutex<TeclaKaio>> {
-        Rc::new(Mutex::new(self))
+impl IntoRcMutex<Box<dyn Tecla>> for TeclaKaio {
+    fn into_rc_mutex(self) -> DynamicMutable<Box<dyn Tecla>> {
+        Rc::new(RwLock::new(Box::new(self)))
     }
 }

@@ -1,16 +1,16 @@
-use std::{rc::Rc, sync::Mutex};
+use std::{rc::Rc, sync::RwLock};
 
-use crate::traits::{IntoRcMutex, Tecla, Teclado, Ucp};
+use crate::traits::{DynamicMutable, IntoRcMutex, Recebedor, Tecla, Teclado};
 
 pub struct TecladoKaio {
-    ucp: Option<Rc<Mutex<dyn Ucp>>>,
+    recebedor: Option<DynamicMutable<Box<dyn Recebedor>>>,
     teclas: Vec<Box<dyn Tecla>>,
 }
 
 impl TecladoKaio {
     pub fn new() -> Self {
         Self {
-            ucp: None,
+            recebedor: None,
             teclas: Vec::new(),
         }
     }
@@ -21,17 +21,17 @@ impl Teclado for TecladoKaio {
         self.teclas.push(tecla);
     }
 
-    fn defina_ucp(&mut self, ucp: Rc<Mutex<dyn Ucp>>) {
-        self.ucp = Some(ucp);
+    fn defina_recebedor(&mut self, recebedor: DynamicMutable<Box<dyn Recebedor>>) {
+        self.recebedor = Some(recebedor);
     }
 
-    fn obtenha_ucp(&self) -> Option<Rc<Mutex<dyn Ucp>>> {
-        self.ucp.clone()
+    fn obtenha_recebedor(&self) -> Option<DynamicMutable<Box<dyn Recebedor>>> {
+        self.recebedor.clone()
     }
 }
 
-impl IntoRcMutex<TecladoKaio> for TecladoKaio {
-    fn into_rc_mutex(self) -> Rc<Mutex<TecladoKaio>> {
-        Rc::new(Mutex::new(self))
+impl IntoRcMutex<Box<dyn Teclado>> for TecladoKaio {
+    fn into_rc_mutex(self) -> DynamicMutable<Box<dyn Teclado>> {
+        Rc::new(RwLock::new(Box::new(self)))
     }
 }

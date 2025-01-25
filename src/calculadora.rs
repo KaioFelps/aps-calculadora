@@ -1,11 +1,11 @@
-use std::{rc::Rc, sync::Mutex};
+use std::{rc::Rc, sync::RwLock};
 
-use crate::traits::{Calculadora, IntoRcMutex, Teclado, Tela, Ucp};
+use crate::traits::{Calculadora, DynamicMutable, IntoRcMutex, Teclado, Tela, Ucp};
 
 pub struct CalculadoraKaio {
-    teclado: Option<Rc<Mutex<dyn Teclado>>>,
-    ucp: Option<Rc<Mutex<dyn Ucp>>>,
-    tela: Option<Rc<Mutex<dyn Tela>>>,
+    teclado: Option<DynamicMutable<Box<dyn Teclado>>>,
+    ucp: Option<DynamicMutable<Box<dyn Ucp>>>,
+    tela: Option<DynamicMutable<Box<dyn Tela>>>,
 }
 
 impl CalculadoraKaio {
@@ -19,33 +19,33 @@ impl CalculadoraKaio {
 }
 
 impl Calculadora for CalculadoraKaio {
-    fn defina_tela(&mut self, tela: Rc<Mutex<dyn Tela>>) {
+    fn defina_tela(&mut self, tela: DynamicMutable<Box<dyn Tela>>) {
         self.tela = Some(tela);
     }
 
-    fn obtenha_tela(&self) -> Option<Rc<Mutex<dyn Tela>>> {
+    fn obtenha_tela(&self) -> Option<DynamicMutable<Box<dyn Tela>>> {
         self.tela.clone()
     }
 
-    fn defina_ucp(&mut self, ucp: Rc<Mutex<dyn Ucp>>) {
+    fn defina_ucp(&mut self, ucp: DynamicMutable<Box<dyn Ucp>>) {
         self.ucp = Some(ucp);
     }
 
-    fn obtenha_ucp(&self) -> Option<Rc<Mutex<dyn Ucp>>> {
+    fn obtenha_ucp(&self) -> Option<DynamicMutable<Box<dyn Ucp>>> {
         self.ucp.clone()
     }
 
-    fn defina_teclado(&mut self, teclado: Rc<Mutex<dyn Teclado>>) {
+    fn defina_teclado(&mut self, teclado: DynamicMutable<Box<dyn Teclado>>) {
         self.teclado = Some(teclado);
     }
 
-    fn obtenha_teclado(&self) -> Option<Rc<Mutex<dyn Teclado>>> {
+    fn obtenha_teclado(&self) -> Option<DynamicMutable<Box<dyn Teclado>>> {
         self.teclado.clone()
     }
 }
 
-impl IntoRcMutex<CalculadoraKaio> for CalculadoraKaio {
-    fn into_rc_mutex(self) -> Rc<Mutex<CalculadoraKaio>> {
-        Rc::new(Mutex::new(self))
+impl IntoRcMutex<Box<dyn Calculadora>> for CalculadoraKaio {
+    fn into_rc_mutex(self) -> DynamicMutable<Box<dyn Calculadora>> {
+        Rc::new(RwLock::new(Box::new(self)))
     }
 }

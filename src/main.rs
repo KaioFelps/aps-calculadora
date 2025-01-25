@@ -19,14 +19,14 @@ fn main() {
     let tecla1 = TeclaKaio::new();
 
     let teclado1 = TecladoKaio::new().into_rc_mutex();
-    teclado1.lock().unwrap().adicione_tecla(Box::new(tecla1));
+    teclado1.write().unwrap().adicione_tecla(Box::new(tecla1));
 
     let tela1 = TelaKaio::new().into_rc_mutex();
 
     let ucp1 = UcpKaio::new().into_rc_mutex();
-    ucp1.lock().unwrap().defina_tela(tela1.clone());
+    ucp1.write().unwrap().defina_tela(tela1.clone());
 
-    let mut calculadora1 = CalculadoraKaio::new();
+    let mut calculadora1: CalculadoraKaio = CalculadoraKaio::new();
     calculadora1.defina_tela(tela1);
     calculadora1.defina_teclado(teclado1);
     calculadora1.defina_ucp(ucp1);
@@ -35,44 +35,49 @@ fn main() {
     calculadora1
         .obtenha_tela()
         .unwrap()
-        .lock()
+        .write()
         .unwrap()
         .adicione(Digito::Um);
-
-    calculadora1.obtenha_tela().unwrap().lock().unwrap().limpe();
 
     calculadora1
         .obtenha_tela()
         .unwrap()
-        .lock()
+        .write()
+        .unwrap()
+        .limpe();
+
+    calculadora1
+        .obtenha_tela()
+        .unwrap()
+        .write()
         .unwrap()
         .defina_sinal(Sinal::Negativo);
 
     calculadora1
         .obtenha_tela()
         .unwrap()
-        .lock()
+        .write()
         .unwrap()
         .adicione(Digito::Um);
 
     calculadora1
         .obtenha_tela()
         .unwrap()
-        .lock()
+        .write()
         .unwrap()
         .adicione(Digito::Zero);
 
     calculadora1
         .obtenha_tela()
         .unwrap()
-        .lock()
+        .write()
         .unwrap()
         .defina_separador_decimal();
 
     calculadora1
         .obtenha_tela()
         .unwrap()
-        .lock()
+        .write()
         .unwrap()
         .adicione(Digito::Um);
 

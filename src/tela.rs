@@ -1,8 +1,11 @@
-use std::{rc::Rc, sync::Mutex};
+use std::{
+    rc::Rc,
+    sync::{Mutex, RwLock},
+};
 
 use crate::{
     enums::{Digito, Sinal},
-    traits::{IntoRcMutex, Tela},
+    traits::{DynamicMutable, IntoRcMutex, Tela},
 };
 
 pub struct TelaKaio;
@@ -31,8 +34,8 @@ impl Tela for TelaKaio {
     }
 }
 
-impl IntoRcMutex<TelaKaio> for TelaKaio {
-    fn into_rc_mutex(self) -> Rc<Mutex<TelaKaio>> {
-        Rc::new(Mutex::new(self))
+impl IntoRcMutex<Box<dyn Tela>> for TelaKaio {
+    fn into_rc_mutex(self) -> DynamicMutable<Box<dyn Tela>> {
+        Rc::new(RwLock::new(Box::new(self)))
     }
 }
