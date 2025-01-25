@@ -14,10 +14,10 @@ pub trait Calculadora {
 }
 
 pub trait Tela {
-    fn adicione(&self, digito: Digito);
-    fn limpe(&self);
-    fn defina_sinal(&self, sinal: Sinal);
-    fn defina_separador_decimal(&self);
+    fn adicione(&mut self, digito: Digito);
+    fn limpe(&mut self);
+    fn defina_sinal(&mut self, sinal: Sinal);
+    fn defina_separador_decimal(&mut self);
 }
 
 pub trait Ucp {
