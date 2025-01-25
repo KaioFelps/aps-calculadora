@@ -29,8 +29,8 @@ impl Ucp for UcpKaio {
         self.tela = Some(tela)
     }
 
-    fn obtenha_tela(&self) -> Option<DynamicMutable<Box<dyn Tela>>> {
-        self.tela.clone()
+    fn obtenha_tela(&self) -> &Option<DynamicMutable<Box<dyn Tela>>> {
+        &self.tela
     }
 
     fn armazene_digito(&mut self, digito: Digito) {

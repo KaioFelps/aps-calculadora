@@ -23,24 +23,24 @@ impl Calculadora for CalculadoraKaio {
         self.tela = Some(tela);
     }
 
-    fn obtenha_tela(&self) -> Option<DynamicMutable<Box<dyn Tela>>> {
-        self.tela.clone()
+    fn obtenha_tela(&self) -> &Option<DynamicMutable<Box<dyn Tela>>> {
+        &self.tela
     }
 
     fn defina_ucp(&mut self, ucp: DynamicMutable<Box<dyn Ucp>>) {
         self.ucp = Some(ucp);
     }
 
-    fn obtenha_ucp(&self) -> Option<DynamicMutable<Box<dyn Ucp>>> {
-        self.ucp.clone()
+    fn obtenha_ucp(&self) -> &Option<DynamicMutable<Box<dyn Ucp>>> {
+        &self.ucp
     }
 
     fn defina_teclado(&mut self, teclado: DynamicMutable<Box<dyn Teclado>>) {
         self.teclado = Some(teclado);
     }
 
-    fn obtenha_teclado(&self) -> Option<DynamicMutable<Box<dyn Teclado>>> {
-        self.teclado.clone()
+    fn obtenha_teclado(&self) -> &Option<DynamicMutable<Box<dyn Teclado>>> {
+        &self.teclado
     }
 }
 

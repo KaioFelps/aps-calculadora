@@ -25,8 +25,8 @@ impl Teclado for TecladoKaio {
         self.recebedor = Some(recebedor);
     }
 
-    fn obtenha_recebedor(&self) -> Option<DynamicMutable<Box<dyn Recebedor>>> {
-        self.recebedor.clone()
+    fn obtenha_recebedor(&self) -> &Option<DynamicMutable<Box<dyn Recebedor>>> {
+        &self.recebedor
     }
 }
 
