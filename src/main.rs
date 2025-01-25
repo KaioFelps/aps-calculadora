@@ -1,13 +1,16 @@
+#![allow(unused)]
+
 use calculadora::CalculadoraKaio;
 use enums::{Digito, Sinal};
 use tecla::TeclaKaio;
 use teclado::TecladoKaio;
 use tela::TelaKaio;
-use traits::{Calculadora, IntoDynamicMutable, Teclado, Ucp};
+use traits::{Calculadora, IntoDynamicMutable};
 use ucp::UcpKaio;
 
 mod calculadora;
 mod enums;
+mod pilha_de_digitos;
 mod tecla;
 mod teclado;
 mod tela;
