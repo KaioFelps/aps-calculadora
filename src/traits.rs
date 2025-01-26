@@ -9,8 +9,8 @@ pub trait Calculadora {
     fn defina_tela(&mut self, tela: DynamicMutable<Box<dyn Tela>>);
     fn obtenha_tela(&self) -> &Option<DynamicMutable<Box<dyn Tela>>>;
 
-    fn defina_ucp(&mut self, ucp: DynamicMutable<Box<dyn Ucp>>);
-    fn obtenha_ucp(&self) -> &Option<DynamicMutable<Box<dyn Ucp>>>;
+    fn defina_ucp(&mut self, ucp: DynamicMutable<Box<dyn UcpRecebedor>>);
+    fn obtenha_ucp(&self) -> &Option<DynamicMutable<Box<dyn UcpRecebedor>>>;
 
     fn defina_teclado(&mut self, teclado: DynamicMutable<Box<dyn Teclado>>);
     fn obtenha_teclado(&self) -> &Option<DynamicMutable<Box<dyn Teclado>>>;
@@ -27,9 +27,11 @@ pub trait Ucp {
     fn defina_tela(&mut self, tela: DynamicMutable<Box<dyn Tela>>);
     fn obtenha_tela(&self) -> &Option<DynamicMutable<Box<dyn Tela>>>;
     fn armazene_digito(&mut self, digito: Digito);
+    fn calcule(&mut self);
 }
 
 pub trait Tecla {
+    fn é(&self, chave: &str) -> bool;
     fn pressione(&self);
     fn defina_teclado(&mut self, teclado: DynamicMutable<Box<dyn Teclado>>);
     fn obtenha_teclado(&self) -> &Option<DynamicMutable<Box<dyn Teclado>>>;
@@ -39,15 +41,20 @@ pub trait Tecla {
 
 pub trait Teclado {
     fn adicione_tecla(&mut self, tecla: Box<dyn Tecla>);
-    fn defina_recebedor(&mut self, ucp: DynamicMutable<Box<dyn Recebedor>>);
-    fn obtenha_recebedor(&self) -> &Option<DynamicMutable<Box<dyn Recebedor>>>;
+    fn defina_recebedor(&mut self, ucp: DynamicMutable<Box<dyn UcpRecebedor>>);
+    fn obtenha_recebedor(&self) -> &Option<DynamicMutable<Box<dyn UcpRecebedor>>>;
+    fn receba_ação(&self, ação: &Ação);
+    fn procure_tecla(&self, chave: &str) -> Option<&dyn Tecla>;
 }
 
 pub trait Recebedor {
-    fn receba_digito(&mut self, digito: Digito);
-    fn receba_operação(&mut self, operação: Operação);
-    fn receba_controle(&mut self, sinal: Controle);
+    fn receba_digito(&mut self, digito: &Digito);
+    fn receba_operação(&mut self, operação: &Operação);
+    fn receba_controle(&mut self, controle: &Controle);
+    fn interprete_ação(&mut self, ação: &Ação);
 }
+
+pub trait UcpRecebedor: Recebedor + Ucp {}
 
 // helper traits
 

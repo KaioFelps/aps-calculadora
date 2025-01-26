@@ -1,10 +1,13 @@
 use std::{rc::Rc, sync::RwLock};
 
-use crate::traits::{Calculadora, DynamicMutable, IntoDynamicMutable, Teclado, Tela, Ucp};
+use crate::{
+    traits::{Calculadora, DynamicMutable, IntoDynamicMutable, Teclado, Tela},
+    ucp::UcpRecebedor,
+};
 
 pub struct CalculadoraKaio {
     teclado: Option<DynamicMutable<Box<dyn Teclado>>>,
-    ucp: Option<DynamicMutable<Box<dyn Ucp>>>,
+    ucp: Option<DynamicMutable<Box<dyn UcpRecebedor>>>,
     tela: Option<DynamicMutable<Box<dyn Tela>>>,
 }
 
@@ -27,11 +30,11 @@ impl Calculadora for CalculadoraKaio {
         &self.tela
     }
 
-    fn defina_ucp(&mut self, ucp: DynamicMutable<Box<dyn Ucp>>) {
+    fn defina_ucp(&mut self, ucp: DynamicMutable<Box<dyn UcpRecebedor>>) {
         self.ucp = Some(ucp);
     }
 
-    fn obtenha_ucp(&self) -> &Option<DynamicMutable<Box<dyn Ucp>>> {
+    fn obtenha_ucp(&self) -> &Option<DynamicMutable<Box<dyn UcpRecebedor>>> {
         &self.ucp
     }
 
