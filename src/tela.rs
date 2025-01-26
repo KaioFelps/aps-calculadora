@@ -79,7 +79,7 @@ impl TelaKaio {
     fn atualize(&mut self) {
         Console::clear_screen();
 
-        for (index, digito) in (&self.digitos).into_iter().enumerate() {
+        for (index, digito) in (&self.digitos).into_iter().flatten().enumerate() {
             // serve para fazer com que os dígitos sejam inseridos da direita pra esquerda
             // como na calculadora de exemplo
             let col_with_offset =
