@@ -1,9 +1,10 @@
 use std::{rc::Rc, sync::RwLock};
 
-use crate::traits::{DynamicMutable, IntoDynamicMutable, Recebedor, Tecla, Teclado};
+use crate::enums::Ação;
+use crate::traits::{DynamicMutable, IntoDynamicMutable, Tecla, Teclado, UcpRecebedor};
 
 pub struct TecladoKaio {
-    recebedor: Option<DynamicMutable<Box<dyn Recebedor>>>,
+    recebedor: Option<DynamicMutable<Box<dyn UcpRecebedor>>>,
     teclas: Vec<Box<dyn Tecla>>,
 }
 
@@ -21,12 +22,29 @@ impl Teclado for TecladoKaio {
         self.teclas.push(tecla);
     }
 
-    fn defina_recebedor(&mut self, recebedor: DynamicMutable<Box<dyn Recebedor>>) {
+    fn defina_recebedor(&mut self, recebedor: DynamicMutable<Box<dyn UcpRecebedor>>) {
         self.recebedor = Some(recebedor);
     }
 
-    fn obtenha_recebedor(&self) -> &Option<DynamicMutable<Box<dyn Recebedor>>> {
+    fn obtenha_recebedor(&self) -> &Option<DynamicMutable<Box<dyn UcpRecebedor>>> {
         &self.recebedor
+    }
+
+    fn receba_ação(&self, ação: &Ação) {
+        println!("{:#?}", ação);
+        self.recebedor
+            .as_ref()
+            .unwrap()
+            .write()
+            .unwrap()
+            .interprete_ação(ação);
+    }
+
+    fn procure_tecla(&self, chave: &str) -> Option<&dyn Tecla> {
+        self.teclas
+            .iter()
+            .find(|tecla| (*tecla).é(chave))
+            .map(|tecla| &(**tecla))
     }
 }
 
