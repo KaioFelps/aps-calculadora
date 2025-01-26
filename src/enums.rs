@@ -1,9 +1,10 @@
+#[derive(Clone, Debug)]
 pub enum Sinal {
     Positivo,
     Negativo,
 }
 
-#[derive(Clone)]
+#[derive(Clone, Debug, PartialEq, Eq)]
 pub enum Digito {
     Zero,
     Um,
@@ -47,8 +48,25 @@ impl Digito {
             Digito::Nove => '9',
         }
     }
+
+    pub fn from_u8(num: u8) -> Self {
+        match num {
+            0 => Digito::Zero,
+            1 => Digito::Um,
+            2 => Digito::Dois,
+            3 => Digito::Três,
+            4 => Digito::Quatro,
+            5 => Digito::Cinco,
+            6 => Digito::Seis,
+            7 => Digito::Sete,
+            8 => Digito::Oito,
+            9 => Digito::Nove,
+            _ => panic!("Houve uma tentativa de serializar um digito inválido: {num}."),
+        }
+    }
 }
 
+#[derive(Clone, Debug)]
 pub enum Operação {
     Soma,
     Subtração,
@@ -64,7 +82,7 @@ impl Default for Operação {
         Self::Noop
     }
 }
-
+#[derive(Debug)]
 pub enum Controle {
     LigaLimpaErro,
     Desliga,
@@ -73,4 +91,12 @@ pub enum Controle {
     MemóriaSubtração,
     Igual,
     SeparadorDecimal,
+}
+
+#[derive(Debug)]
+pub enum Ação {
+    Ctrl(Controle),
+    Op(Operação),
+    Di(Digito),
+    Si(Sinal),
 }
