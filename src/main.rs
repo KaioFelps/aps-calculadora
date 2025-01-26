@@ -2,6 +2,7 @@
 
 use calculadora::CalculadoraKaio;
 use enums::{Digito, Sinal};
+use helpers::montar_calculadora;
 use tecla::TeclaKaio;
 use teclado::TecladoKaio;
 use tela::TelaKaio;
@@ -12,6 +13,7 @@ use ucp::UcpKaio;
 
 mod calculadora;
 mod enums;
+mod helpers;
 mod pilha_de_digitos;
 mod tecla;
 mod teclado;
@@ -19,25 +21,14 @@ mod tela;
 mod traits;
 mod ucp;
 
+#[cfg(test)]
+mod tests;
+
 fn main() {
     // Montando a calculadora como numa linha de produção
-    let tecla1 = TeclaKaio::new();
-
-    let teclado1 = TecladoKaio::new().into_dynamic_mutable();
-    teclado1.write().unwrap().adicione_tecla(Box::new(tecla1));
-
-    let tela1 = TelaKaio::new().into_dynamic_mutable();
-
-    let ucp1 = UcpKaio::new().into_dynamic_mutable();
-    ucp1.write().unwrap().defina_tela(tela1.clone());
-
-    let mut calculadora1: CalculadoraKaio = CalculadoraKaio::new();
-    calculadora1.defina_tela(tela1);
-    calculadora1.defina_teclado(teclado1);
-    calculadora1.defina_ucp(ucp1);
-
+    let calculadora = montar_calculadora();
     // Testando a calculadora
-    let tela = calculadora1.obtenha_tela();
+    let tela = calculadora.obtenha_tela();
     let mut tela = tela.get_write_ref();
 
     tela.adicione(Digito::Um);
