@@ -1,9 +1,6 @@
 use std::{rc::Rc, sync::RwLock};
 
-use crate::{
-    traits::{Calculadora, DynamicMutable, IntoDynamicMutable, Teclado, Tela},
-    ucp::UcpRecebedor,
-};
+use crate::traits::{Calculadora, DynamicMutable, IntoDynamicMutable, Teclado, Tela, UcpRecebedor};
 
 pub struct CalculadoraKaio {
     teclado: Option<DynamicMutable<Box<dyn Teclado>>>,
